@@ -1,0 +1,29 @@
+Open localhost:8080
+- Manage jenkins
+  - Plugins
+     - Available plugins
+        - Github integration 
+        - Maven integration
+        - Pileline:stage view
+  - Credentials
+     - system
+        - Global credentials
+            - Add credentials
+                - Username & password (same as github username and password)
+                - ID: jenkins-CICD
+                - Click Create
+  - Tools
+     - Retain the default maven configuration
+     - Add Java 
+          - Name: JDK
+          - JAVA_HOME: /usr/lib/jvm/java-11-openjdk-amd64
+    - Add Git 
+          - Name: Git
+          - Path to git: /usr/bin/git
+    - Add Gradle 
+          - Name: Gradle
+          - GRADLE_HOME: /usr/bin/gradle
+    - Add Maven 
+          - Name: Maven
+          - MAVEN_HOME: /usr/bin/mvn
+    - Apply & Save
