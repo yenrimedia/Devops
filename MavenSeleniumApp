@@ -1,0 +1,109 @@
+mvn archetype:generate -DgroupId=com.example -DartifactId=MavenSeleniumApp -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+
+cd MavenSeleniumApp
+
+gedit pom.xml
+//code inside pom.xml
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.example</groupId>
+  <artifactId>MyMavenSeleniumApp</artifactId>
+  <packaging>jar</packaging>
+  <version>1.0-SNAPSHOT</version>
+  <name>MyMavenSeleniumApp</name>
+  <url>http://maven.apache.org</url>  
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>    
+    <!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
+<!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
+<dependency>
+    <groupId>org.seleniumhq.selenium</groupId>
+    <artifactId>selenium-java</artifactId>
+    <version>4.10.0</version>
+</dependency> 
+  </dependencies>
+  <!-- Build: Configuring plugins and build settings -->
+<build>
+<plugins>
+<!-- Example: Maven Compiler Plugin to compile Java code -->
+<plugin>
+<groupId>org.apache.maven.plugins</groupId>
+<artifactId>maven-compiler-plugin</artifactId>
+<version>3.8.1</version>
+<configuration>
+<source>1.8</source>
+<target>1.8</target>
+</configuration>
+</plugin>
+<!-- Example: Maven Surefire Plugin to run tests -->
+<plugin>
+<groupId>org.apache.maven.plugins</groupId>
+<artifactId>maven-surefire-plugin</artifactId>
+<version>2.22.2</version>
+</plugin>
+<plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <version>3.0.1</version>      
+           <configuration>
+                <archive>
+                    <manifestEntries>
+                        <Main-Class>com.example.App</Main-Class>
+                    </manifestEntries>
+                </archive>
+            </configuration>           
+        </plugin>
+        <plugin>
+<groupId>org.apache.maven.plugins</groupId>
+<artifactId>maven-shade-plugin</artifactId>
+<version>3.3.0</version>
+<executions>
+<execution>
+<phase>package</phase>
+<goals>
+<goal>shade</goal>
+</goals>
+</execution>
+</executions>
+</plugin>
+</plugins>
+</build>  
+</project>
+
+cd src/main/java/com/example
+
+gedit App.java
+//code inside App.java
+package com.example; 
+import org.openqa.selenium.By; 
+import org.openqa.selenium.WebDriver; 
+import org.openqa.selenium.chrome.ChromeDriver; 
+/** 
+ * Hello world! 
+ * 
+ */ 
+public class App  
+{ 
+    public static void main( String[] args ) 
+    { 
+        WebDriver driver=new ChromeDriver(); 
+        driver.get("https://www.saucedemo.com/"); 
+        driver.manage().window().maximize(); 
+        driver.findElement(By.id("user-name")).sendKeys("standard_user"); 
+        driver.findElement(By.id("password")).sendKeys("secret_sauce"); 
+        driver.findElement(By.id("login-button")).click(); 
+    } 
+}
+
+//go back to MavenAnsibleApp 
+
+mvn clean install
+
+java -jar target/MavenSeleniumApp-1.0-SNAPSHOT.jar
+//' mvn exec:java -Dexec.mainClass="com.example.App" ' alternative code the above line
