@@ -9,7 +9,7 @@ gradle build
 gradle run
 
 gedit build.gradle
-//code atthe end of build.gradle
+//code at the end of build.gradle
 task Hello{
   doLast{
     println 'This is inside Hello task'
