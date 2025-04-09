@@ -1,0 +1,20 @@
+sudo apt install gradle
+gradle --version
+
+mkdir Gradle
+cd Gradle
+
+gradle init --type java-application
+gradle build
+gradle run
+
+gedit build.gradle
+//code atthe end of build.gradle
+task Hello{
+  doLast{
+    println 'This is inside Hello task'
+  }
+}
+
+gradle build
+gradle Hello
