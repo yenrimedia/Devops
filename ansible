@@ -1,0 +1,55 @@
+sudo apt install ansible -y
+
+ansible --version
+
+mkdir ansible
+cd ansible
+
+gedit inventory.ini
+//code inside inventory.ini
+[local]
+localhost ansible_connection=local
+
+
+ansible -i inventory.ini local -m ping
+
+gedit playbook.yml
+//code inside playbook.yml
+- name: Localhost Configuration
+  hosts: local
+  become: yes
+  tasks:
+    - name: Update package lists
+      apt:
+        update_cache: yes
+
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+
+    - name: Create a test file in /tmp
+      copy:
+        content: "This is a test file created by Ansible."
+        dest: /tmp/testfile.txt
+
+    - name: Display a message
+      debug:
+        msg: "Ansible has successfully configured localhost!
+
+
+ansible-playbook -i inventory.ini playbook.yml --ask-become-pass
+
+gedit youtube.yml
+//code inside youtube.yml
+- name: Open YouTube in Browser on Localhost
+  hosts: localhost
+  connection: local 
+  become: no 
+  tasks:
+    - name: Open YouTube in Google Chrome
+      command: google-chrome "https://www.youtube.com"
+      ignore_errors: yes 
+
+
+ansible-playbook -i inventory.ini youtube.yml --ask-become-pass
