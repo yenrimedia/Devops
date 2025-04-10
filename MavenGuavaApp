@@ -100,7 +100,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'master', url: 'https://github.com/nreddyg07/GuavaApp.git'
+                git branch: 'master', url: 'https://github.com/yenrimedia/GuavaApp.git'
             }
         }
         stage('Build') {
@@ -168,8 +168,8 @@ cat destination.txt
 git init
 git add .
 git commit -m "Initial commit"
-git remote add origin https://github.com/nreddyg07/GuavaApp.git
-git remote set-url origin https://"your-token"@github.com/nreddyg07/GuavaApp.git
+git remote add origin https://github.com/yenrimedia/GuavaApp.git
+git remote set-url origin https://"your-token"@github.com/yenrimedia/GuavaApp.git
 git push -u origin master
 
 Create a jenkins pipeline named "Guava-CICD" and build it
