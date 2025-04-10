@@ -19,7 +19,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'master', url: 'https://github.com/nreddyg07/GradleJenkins.git'
+                git branch: 'master', url: 'https://github.com/yenrimedia/GradleJenkins.git'
             }
         }
         stage('Build') {
@@ -56,8 +56,8 @@ gradle run
 git init
 git add .
 git commit -m "Initial commit"
-git remote add origin https://github.com/nreddyg07/GradleJenkins.git
-git remote set-url origin https://"your-token"@github.com/nreddyg07/GradleJenkins.git
+git remote add origin https://github.com/yenrimedia/GradleJenkins.git
+git remote set-url origin https://"your-token"@github.com/yenrimedia/GradleJenkins.git
 git push -u origin master
 
 Create a jenkins pipeline named "GradleJenkins" and build it
