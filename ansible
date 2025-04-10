@@ -35,7 +35,7 @@ gedit playbook.yml
 
     - name: Display a message
       debug:
-        msg: "Ansible has successfully configured localhost!
+        msg: "Ansible has successfully configured localhost!"
 
 
 ansible-playbook -i inventory.ini playbook.yml --ask-become-pass
