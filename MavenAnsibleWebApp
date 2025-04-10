@@ -1,0 +1,123 @@
+sudo systemctl start tomcat
+
+mvn archetype:generate -DgroupId=com.example -DartifactId=MavenAnsibleWebapp -DarchetypeArtifactId=maven-archetype-webapp -DinteractiveMode=false
+
+cd MavenAnsibleWebapp
+
+gedit pom.xml
+//code inside pom.xml
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.example</groupId>
+  <artifactId>MavenAnsibleWebapp</artifactId>
+  <packaging>war</packaging>
+  <version>1.0</version>
+  <name>MavenAnsibleWebapp</name>
+  <url>http://maven.apache.org</url>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
+<dependency>
+    <groupId>javax.servlet</groupId>
+    <artifactId>javax.servlet-api</artifactId>
+    <version>4.0.1</version>
+    <scope>provided</scope>
+</dependency>
+  </dependencies>
+  <build>
+  <plugins>
+  <plugin>
+  <groupId>org.apache.maven.plugins</groupId>
+  <artifactId>maven-war-plugin</artifactId>
+  <version>3.4.0</version>
+  </plugin>
+  </plugins>
+    <finalName>MavenAnsibleWebapp</finalName>
+  </build>
+</project>
+
+
+Create a github repository named "MavenAnsibleWebapp"
+
+gedit Jenkinsfile
+//code inside Jenkinsfile
+pipeline{
+	agent any
+	tools{
+		maven 'Maven'
+	}
+	stages{
+		stage('Checkout'){
+			steps{
+				git branch: 'master', url: 'https://github.com/nreddyg07/MavenAnsibleWebapp.git'
+			}
+		}
+		stage('Build'){
+			steps{
+				sh 'mvn clean package'
+			}
+		}
+		stage('Archive'){
+			steps{
+				archiveArtifacts artifacts: 'target/*.war', fingerprint:true
+			}
+		}
+		stage('Deploy'){
+			steps{
+				sh 'mvn clean package'
+				sh 'ansible-playbook ansible/playbook.yml -i ansible/hosts.ini'
+			}
+		}
+	}
+}
+
+
+mvn clean install
+
+mkdir ansible
+cd ansible
+
+gedit hosts.ini
+//code inside hosts.ini
+[web]
+localhost ansible_connection=local ansible_python_interpreter=/usr/bin/python3
+
+
+gedit playbook.yml
+//code inside playbook.yml --in src "workspace/*/target" *-Jenkins pipeline name
+---
+- name: Deploy to Tomcat
+  hosts: web
+  become: yes
+  tasks:
+    - name: Copy WAR file to Tomcat
+      copy:
+        src: "/var/snap/jenkins/4832/workspace/MavenAnsible-CICD/target/MavenAnsibleWebapp.war"
+        dest: "/opt/tomcat/webapps/MavenAnsibleWebapp.war"
+        remote_src: no
+    - name:  Restart Tomcat
+      systemd:
+        name: tomcat
+        state: restarted
+
+
+cd ..
+
+git init
+git add .
+git commit -m "Initial commit"
+git remote add origin https://github.com/nreddyg07/MavenAnsibleWebapp.git
+git remote set-url origin https://"your-token"@github.com/nreddyg07/MavenAnsibleWebapp.git
+git push -u origin master
+
+Create a jenkins pipeline named "MavenAnsible-CICD" and build it
+
+Open localhost:9090, go to manager app and open "MavenAnsibleWebapp"
+
+sudo systemctl stop tomcat
