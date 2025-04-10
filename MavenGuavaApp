@@ -3,7 +3,7 @@ mvn --version
 
 mvn archetype:generate -DgroupId=com.example -DartifactId=GuavaApp -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
 
-cd GauvaApp
+cd GuavaApp
 
 gedit pom.xml
 //code inside pom.xml
