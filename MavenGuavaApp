@@ -1,0 +1,175 @@
+sudo apt install maven
+mvn --version
+
+mvn archetype:generate -DgroupId=com.example -DartifactId=GuavaApp -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+
+cd GauvaApp
+
+gedit pom.xml
+//code inside pom.xml
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.example</groupId>
+  <artifactId>GuavaApp</artifactId>
+  <packaging>jar</packaging>
+  <version>1.0-SNAPSHOT</version>
+  <name>GuavaApp</name>
+  <url>http://maven.apache.org</url>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>  
+    <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+<dependency>
+    <groupId>com.google.guava</groupId>
+    <artifactId>guava</artifactId>
+    <version>33.4.0-jre</version>
+</dependency>
+<!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+<dependency>
+    <groupId>commons-io</groupId>
+    <artifactId>commons-io</artifactId>
+    <version>2.18.0</version>
+</dependency>
+  </dependencies>
+  <!-- Build: Configuring plugins and build settings -->
+<build>
+<plugins>
+<!-- Example: Maven Compiler Plugin to compile Java code -->
+<plugin>
+<groupId>org.apache.maven.plugins</groupId>
+<artifactId>maven-compiler-plugin</artifactId>
+<version>3.8.1</version>
+<configuration>
+<source>1.8</source>
+<target>1.8</target>
+</configuration>
+</plugin>
+<!-- Example: Maven Surefire Plugin to run tests -->
+<plugin>
+<groupId>org.apache.maven.plugins</groupId>
+<artifactId>maven-surefire-plugin</artifactId>
+<version>2.22.2</version>
+</plugin>
+<plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <version>3.1.0</version>
+            <configuration>
+                <archive>
+                    <manifestEntries>
+                        <Main-Class>com.example.App</Main-Class>
+                    </manifestEntries>
+                </archive>
+            </configuration>
+        </plugin>
+       <plugin>
+<groupId>org.apache.maven.plugins</groupId>
+<artifactId>maven-shade-plugin</artifactId>
+<version>3.3.0</version>
+<executions>
+<execution>
+<phase>package</phase>
+<goals>
+<goal>shade</goal>
+</goals>
+</execution>
+</executions>
+</plugin> 
+</plugins>
+</build>
+</project>
+
+
+Create a github repository named "GuavaApp"
+
+gedit source.txt
+//can write anything inside source.txt
+
+gedit Jenkinsfile
+//code inside Jenkinsfile
+pipeline {
+    agent any  // Use any available agent
+    tools {
+        maven 'Maven'  // Ensure this matches the name configured in Jenkins
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'master', url: 'https://github.com/nreddyg07/GuavaApp.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh 'mvn clean package'  // Run Maven build
+            }
+        }
+        stage('Test') {
+            steps {
+                sh 'mvn test'  // Run unit tests
+            }
+        }      
+        stage('Run Application') {
+            steps {
+                // Start the JAR application
+                sh 'java -jar target/GuavaApp-1.0-SNAPSHOT.jar'
+            }
+        }        
+    }
+    post {
+        success {
+            echo 'Build and deployment successful!'
+        }
+        failure {
+            echo 'Build failed!'
+        }
+    }
+}
+
+
+cd src/main/java/com/example
+gedit App.java
+//code inside App.java
+package com.example;
+import org.apache.commons.io.FileUtils;
+import java.io.File;
+import java.io.IOException;
+import com.google.common.collect.ImmutableList;
+public class App 
+{
+    public static void main( String[] args )
+    {
+        ImmutableList<String> fruits = ImmutableList.of("Apple", "Banana", "Cherry");
+        System.out.println(fruits);
+        File sourceFile = new File("source.txt");
+        File destFile = new File("destination.txt");
+        try {
+            FileUtils.copyFile(sourceFile, destFile);
+            System.out.println("File copied successfully!");
+        } catch (IOException e) {
+            System.err.println("Error occurred while copying file: " + e.getMessage());
+        }
+    }
+}
+
+
+mvn clean install
+
+java -jar target/GuavaApp-1.0-SNAPSHOT.jar 
+//execute the next command if the above one doesnt work
+mvn exec:java -Dexec.mainClass="com.example.App"
+
+cat destination.txt
+
+git init
+git add .
+git commit -m "Initial commit"
+git remote add origin https://github.com/nreddyg07/GuavaApp.git
+git remote set-url origin https://"your-token"@github.com/nreddyg07/GuavaApp.git
+git push -u origin master
+
+Create a jenkins pipeline named "Guava-CICD" and build it
