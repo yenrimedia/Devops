@@ -68,6 +68,8 @@ gedit pom.xml
 mvn clean install
 
 java -jar target/MavenToGradle-1.0-SNAPSHOT.jar 
+//execute the next command if the above one doesnt work
+mvn exec:java -Dexec.mainClass="com.example.App"
 
 gradle init --type pom
 
