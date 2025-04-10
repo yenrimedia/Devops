@@ -55,7 +55,7 @@ pipeline{
 	stages{
 		stage('Checkout'){
 			steps{
-				git branch: 'master', url: 'https://github.com/nreddyg07/MavenAnsibleWebapp.git'
+				git branch: 'master', url: 'https://github.com/yenrimedia/MavenAnsibleWebapp.git'
 			}
 		}
 		stage('Build'){
@@ -112,8 +112,8 @@ cd ..
 git init
 git add .
 git commit -m "Initial commit"
-git remote add origin https://github.com/nreddyg07/MavenAnsibleWebapp.git
-git remote set-url origin https://"your-token"@github.com/nreddyg07/MavenAnsibleWebapp.git
+git remote add origin https://github.com/yenrimedia/MavenAnsibleWebapp.git
+git remote set-url origin https://"your-token"@github.com/yenrimedia/MavenAnsibleWebapp.git
 git push -u origin master
 
 Create a jenkins pipeline named "MavenAnsible-CICD" and build it
